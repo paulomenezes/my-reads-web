@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 
-class App extends Component {
+import Book from '../Book';
+
+export default class App extends Component {
   render() {
     return (
-      <section className="section">
-        <div className="container">
-          <h1 className="title">Hello World</h1>
-          <p className="subtitle">
-            My first website with <strong>Bulma</strong>
-          </p>
-        </div>
+      <section>
+        <Book title="Harry Potter" author="JK Rowling" cover="https://images.gr-assets.com/books/1361039191l/1.jpg" shelf="CURRENTLY_READING" />
       </section>
     );
   }
 }
-
-export default App;
