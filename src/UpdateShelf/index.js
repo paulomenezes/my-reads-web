@@ -19,14 +19,20 @@ export default class UpdateShelf extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('click', e => {
-      if (this.state.opened && !this.dropdownRef.current.contains(e.target)) {
-        this.setState({
-          opened: false
-        });
-      }
-    });
+    window.addEventListener('click', this.onWindowClick, false);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('click', this.onWindowClick, false);
+  }
+
+  onWindowClick = e => {
+    if (this.state.opened && !this.dropdownRef.current.contains(e.target)) {
+      this.setState({
+        opened: false
+      });
+    }
+  };
 
   toggleDropDown = () => {
     this.setState(prevState => ({

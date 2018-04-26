@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, simulant } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import UpdateShelf from './';
 import { BOOK_SHELF_OPTIONS } from '../constants';
@@ -43,18 +43,20 @@ describe('<UpdateShelf />', () => {
     expect(dropDownMenu.length).toEqual(1);
   });
 
-  // it('should close when click outside', () => {
-  //   const dropDown = wrapper.find('div.dropdown button');
-  //   dropDown.simulate('click');
+  it('should close when click outside', () => {
+    var mounted = mount(<UpdateShelf value={value} />);
 
-  //   let dropDownMenu = wrapper.find('div.dropdown-menu');
-  //   expect(dropDownMenu.length).toEqual(1);
+    const dropDown = mounted.find('div.dropdown button');
+    dropDown.simulate('click');
 
-  //   document.body.click();
+    let dropDownMenu = mounted.find('div.dropdown-menu');
+    expect(dropDownMenu.length).toEqual(1);
 
-  //   dropDownMenu = wrapper.find('div.dropdown-menu');
-  //   expect(dropDownMenu.length).toEqual(0);
-  // });
+    document.body.click();
+
+    dropDownMenu = mounted.find('div.dropdown-menu');
+    expect(dropDownMenu.length).toEqual(0);
+  });
 
   it('should render all the options in dropdown', () => {
     const dropDown = wrapper.find('div.dropdown button');
