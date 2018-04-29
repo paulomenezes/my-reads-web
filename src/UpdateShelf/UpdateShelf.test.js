@@ -110,4 +110,9 @@ describe('<UpdateShelf />', () => {
     expect(onUpdateValueFn.mock.calls.length).toEqual(1);
     expect(onUpdateValueFn.mock.calls[0][0]).toEqual('NONE');
   });
+
+  it('should unmount correctly', () => {
+    const wrapper = mount(<UpdateShelf value={value} onUpdateValue={() => {}} />);
+    wrapper.unmount();
+  });
 });

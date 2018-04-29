@@ -8,7 +8,7 @@ export default class Book extends React.Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
     shelf: PropTypes.string.isRequired,
-    onUpdateValue: PropTypes.func.isRequired
+    onUpdateShelf: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -37,7 +37,7 @@ export default class Book extends React.Component {
         </div>
         <div className="book-title">{this.props.book.title}</div>
         <div className="book-author">{this.props.book.authors[0]}</div>
-        <UpdateShelf value={this.props.shelf} onUpdateValue={shelf => this.props.onUpdateValue(shelf, this.props.book.id)} />
+        <UpdateShelf value={this.props.shelf} onUpdateValue={this.props.onUpdateShelf} />
       </div>
     );
   }

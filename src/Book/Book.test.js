@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import Book from './Book';
 
@@ -16,7 +16,7 @@ beforeEach(() => {
     shelf: 'CURRENTLY_READING'
   };
 
-  wrapper = shallow(<Book book={book} shelf={book.shelf} onUpdateValue={() => {}} />);
+  wrapper = mount(<Book book={book} shelf={book.shelf} onUpdateShelf={() => {}} />);
 });
 
 describe('<Book />', () => {

@@ -29,7 +29,7 @@ export default class App extends Component {
     }
   }
 
-  onUpdateValue = (shelf, bookId) => {
+  onUpdateShelf = (shelf, bookId) => {
     const oldShelf = this.getBookShelf(bookId);
     const index = this.state.user.shelves[oldShelf].indexOf(bookId);
 
@@ -65,7 +65,7 @@ export default class App extends Component {
           <div className="columns">
             {this.state.books.map(book => (
               <div className="column is-2" key={book.id}>
-                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateValue={this.onUpdateValue} />
+                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={shelf => this.onUpdateShelf(shelf, book.id)} />
               </div>
             ))}
           </div>
