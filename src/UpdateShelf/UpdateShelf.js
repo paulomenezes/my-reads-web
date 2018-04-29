@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { BOOK_SHELF_OPTIONS } from '../constants';
+import './UpdateShelf.css';
+import { BOOK_SHELF_OPTIONS, BOOK_SHELF_ICONS } from '../constants';
 
 export default class UpdateShelf extends React.Component {
   state = {
@@ -9,7 +10,8 @@ export default class UpdateShelf extends React.Component {
   };
 
   static propTypes = {
-    value: PropTypes.oneOf(Object.keys(BOOK_SHELF_OPTIONS)).isRequired
+    value: PropTypes.oneOf(Object.keys(BOOK_SHELF_OPTIONS)).isRequired,
+    onUpdateValue: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -40,11 +42,22 @@ export default class UpdateShelf extends React.Component {
     }));
   };
 
+  onUpdateValue = item => {
+    this.setState({
+      opened: false
+    });
+
+    this.props.onUpdateValue(item);
+  };
+
   render() {
     return (
       <div ref={this.dropdownRef} className="dropdown is-active">
         <div className="dropdown-trigger">
-          <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.toggleDropDown}>
+          <button className={`button ${this.props.value}`} aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.toggleDropDown}>
+            <i className={`icon-shelf icon-${this.props.value}`}>
+              <i className={`fas ${BOOK_SHELF_ICONS[this.props.value]}`} />
+            </i>
             <span>{BOOK_SHELF_OPTIONS[this.props.value]}</span>
             <span className="icon is-small">
               <i className="fas fa-angle-down" aria-hidden="true" />
@@ -52,10 +65,10 @@ export default class UpdateShelf extends React.Component {
           </button>
         </div>
         {this.state.opened && (
-          <div className="dropdown-menu" id="dropdown-menu" role="menu">
+          <div className={`dropdown-menu menu-${this.props.value}`} id="dropdown-menu" role="menu">
             <div className="dropdown-content">
               {Object.keys(BOOK_SHELF_OPTIONS).map(key => (
-                <a key={key} className={`dropdown-item ${key === this.props.value && 'is-active'}`}>
+                <a key={key} onClick={() => this.onUpdateValue(key)} className={`dropdown-item ${key === this.props.value && 'is-active'}`}>
                   {BOOK_SHELF_OPTIONS[key]}
                 </a>
               ))}

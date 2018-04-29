@@ -1,0 +1,26 @@
+.header {
+  background-color: #f3f3f3;
+  height: 100px;
+
+  margin-bottom: 30px;
+
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.header .logo {
+  font-size: 36px;
+  color: #000;
+
+  height: 88px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 3px;
+}
+
+.header .logo .logo-reads {
+  font-weight: lighter;
+}
+.header .logo .logo-dot {
+  font-weight: bold;
+  color: #f00;
+}

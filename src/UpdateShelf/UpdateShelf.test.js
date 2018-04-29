@@ -1,14 +1,21 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import UpdateShelf from './';
+import UpdateShelf from './UpdateShelf';
 import { BOOK_SHELF_OPTIONS } from '../constants';
 
-let wrapper, value;
+let wrapper, value, onUpdateValueFn;
 
 beforeEach(() => {
   value = 'READ';
-  wrapper = shallow(<UpdateShelf value={value} />);
+
+  onUpdateValueFn = jest.fn();
+
+  wrapper = shallow(<UpdateShelf value={value} onUpdateValue={onUpdateValueFn} />);
+});
+
+afterEach(() => {
+  onUpdateValueFn.mockReset();
 });
 
 describe('<UpdateShelf />', () => {
@@ -44,7 +51,7 @@ describe('<UpdateShelf />', () => {
   });
 
   it('should close when click outside', () => {
-    var mounted = mount(<UpdateShelf value={value} />);
+    var mounted = mount(<UpdateShelf value={value} onUpdateValue={() => {}} />);
 
     const dropDown = mounted.find('div.dropdown button');
     dropDown.simulate('click');
@@ -54,8 +61,10 @@ describe('<UpdateShelf />', () => {
 
     document.body.click();
 
-    dropDownMenu = mounted.find('div.dropdown-menu');
-    expect(dropDownMenu.length).toEqual(0);
+    setTimeout(() => {
+      dropDownMenu = mounted.find('div.dropdown-menu');
+      expect(dropDownMenu.length).toEqual(0);
+    }, 100);
   });
 
   it('should render all the options in dropdown', () => {
@@ -78,5 +87,27 @@ describe('<UpdateShelf />', () => {
     const element = wrapper.find('div.dropdown-menu .dropdown-content a.is-active');
     expect(element.length).toEqual(1);
     expect(element.text()).toEqual(BOOK_SHELF_OPTIONS[value]);
+  });
+
+  it('should be able to change the option', () => {
+    let element = wrapper.find('div.dropdown');
+    expect(
+      element
+        .find('button span')
+        .first()
+        .text()
+    ).toEqual(BOOK_SHELF_OPTIONS[value]);
+
+    const dropDown = wrapper.find('div.dropdown button');
+    dropDown.simulate('click');
+
+    const option = wrapper.find('div.dropdown-menu .dropdown-content a');
+    option.first().simulate('click');
+
+    let dropDownMenu = wrapper.find('div.dropdown-menu');
+
+    expect(dropDownMenu.length).toEqual(0);
+    expect(onUpdateValueFn.mock.calls.length).toEqual(1);
+    expect(onUpdateValueFn.mock.calls[0][0]).toEqual('NONE');
   });
 });
