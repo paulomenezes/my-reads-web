@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import UpdateShelf from './UpdateShelf';
-import { BOOK_SHELF_OPTIONS } from '../constants';
+import { BOOK_SHELF_OPTIONS } from '../../constants';
 
 let wrapper, value, onUpdateValueFn;
 

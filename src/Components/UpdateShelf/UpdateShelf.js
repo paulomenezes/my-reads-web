@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './UpdateShelf.css';
-import { BOOK_SHELF_OPTIONS, BOOK_SHELF_ICONS } from '../constants';
+import { BOOK_SHELF_OPTIONS, BOOK_SHELF_ICONS } from '../../constants';
 
 export default class UpdateShelf extends React.Component {
   state = {

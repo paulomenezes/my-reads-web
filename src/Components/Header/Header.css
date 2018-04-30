@@ -17,10 +17,26 @@
   letter-spacing: 3px;
 }
 
+.header .logo .logo-my {
+  color: #000;
+}
+
 .header .logo .logo-reads {
   font-weight: lighter;
+  color: #000;
 }
+
 .header .logo .logo-dot {
   font-weight: bold;
+  color: #f00;
+}
+
+.header .user-sign {
+  text-align: right;
+  line-height: 88px;
+}
+
+.header .user-sign a {
+  margin: 0 5px;
   color: #f00;
 }
