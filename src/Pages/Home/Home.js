@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
+import './Home.css';
+
 import Book from '../../Components/Book/Book';
-import { getAll } from '../../BooksAPI';
+import { getAll } from '../../Services/BooksAPI';
 
 export default class App extends Component {
   state = {
@@ -17,14 +19,14 @@ export default class App extends Component {
   };
 
   async componentDidMount() {
-    try {
-      const books = await getAll();
-      this.setState({
-        books: books.slice(0, 6)
-      });
-    } catch (error) {
-      // console.log(error);
-    }
+    // try {
+    //   const books = await getAll();
+    //   this.setState({
+    //     books: books.slice(0, 3)
+    //   });
+    // } catch (error) {
+    //   // console.log(error);
+    // }
   }
 
   onUpdateShelf = (shelf, bookId) => {
@@ -60,11 +62,25 @@ export default class App extends Component {
       <section>
         <div className="container">
           <div className="columns">
-            {this.state.books.map(book => (
-              <div className="column is-2" key={book.id}>
-                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={shelf => this.onUpdateShelf(shelf, book.id)} />
-              </div>
-            ))}
+            <div className="column is-6">
+              <div className="book-category-title">CURRENTLY READING</div>
+              <i>No currently reading books</i>
+              {/* <div className="columns">
+                {this.state.books.map(book => (
+                  <div className="column is-4" key={book.id}>
+                    <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={shelf => this.onUpdateShelf(shelf, book.id)} />
+                  </div>
+                ))}
+              </div> */}
+              <div className="book-category-title">WANT TO READ</div>
+              <i>No want to read books</i>
+              <div className="book-category-title">READ</div>
+              <i>No read books</i>
+            </div>
+            <div className="column is-6">
+              <div className="book-category-title">UPDATES</div>
+              <i>No updates</i>
+            </div>
           </div>
         </div>
       </section>

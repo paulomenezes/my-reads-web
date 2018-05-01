@@ -33,10 +33,13 @@ export default class Book extends React.Component {
     return (
       <div className="book">
         <div className="book-cover" ref={this.coverRef}>
-          <img alt={this.props.book.title} src={this.props.book.imageLinks.thumbnail} />
+          {this.props.book.volumeInfo.imageLinks &&
+            this.props.book.volumeInfo.imageLinks.thumbnail && (
+              <img alt={this.props.book.volumeInfo.title} src={this.props.book.volumeInfo.imageLinks.thumbnail} />
+            )}
         </div>
-        <div className="book-title">{this.props.book.title}</div>
-        <div className="book-author">{this.props.book.authors[0]}</div>
+        <div className="book-title">{this.props.book.volumeInfo.title}</div>
+        <div className="book-author">{this.props.book.volumeInfo.authors && this.props.book.volumeInfo.authors.join(', ')}</div>
         <UpdateShelf value={this.props.shelf} onUpdateValue={this.props.onUpdateShelf} />
       </div>
     );

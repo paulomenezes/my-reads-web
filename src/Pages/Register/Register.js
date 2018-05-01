@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { DebounceInput } from 'react-debounce-input';
 
 // import PropTypes from 'prop-types';
@@ -7,6 +8,7 @@ const FIELD_CLASS = {
   blank: '',
   loading: '',
   error: 'is-danger',
+  email: 'is-danger',
   success: 'is-success'
 };
 
@@ -23,6 +25,8 @@ export default class Register extends React.Component {
     username: '',
     email: '',
     password: '',
+    loading: false,
+    redirectToHome: false,
     statusFields: {
       name: 'blank',
       username: 'blank',
@@ -31,15 +35,32 @@ export default class Register extends React.Component {
     }
   };
 
+  validateEmail = email => /\S+@\S+\.\S+/.test(email);
+
   inputOnChange = async event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+    const id = event.target.id;
+    const value = event.target.value;
 
-    if (event.target.id === 'username' || event.target.id === 'email') {
-      const id = event.target.id;
-      const value = event.target.value;
+    this.setState(prevState => ({
+      [id]: value,
+      statusFields: {
+        ...prevState.statusFields,
+        [id]: value && value.length > 0 ? 'success' : 'error'
+      }
+    }));
 
+    if (id === 'email' && !this.validateEmail(value)) {
+      this.setState(prevState => ({
+        statusFields: {
+          ...prevState.statusFields,
+          [id]: 'error'
+        }
+      }));
+
+      return;
+    }
+
+    if (value && value.length > 0 && (id === 'username' || id === 'email')) {
       this.setState(prevState => ({
         statusFields: {
           ...prevState.statusFields,
@@ -68,72 +89,176 @@ export default class Register extends React.Component {
     }
   };
 
+  enableButton = () => {
+    return this.state.loading || Object.keys(this.state.statusFields).filter(key => this.state.statusFields[key] === 'success').length !== 4;
+  };
+
+  onSubmit = async event => {
+    event.preventDefault();
+
+    if (this.enableButton()) {
+      return;
+    }
+
+    try {
+      this.setState({
+        loading: true
+      });
+
+      const user = {
+        name: this.state.name,
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password
+      };
+
+      const response = await fetch('http://localhost:8080/users', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+
+      const id = await response.text();
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          id,
+          name: user.name,
+          username: user.username,
+          email: user.email
+        })
+      );
+
+      this.setState({
+        redirectToHome: true
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   render() {
+    if (this.state.redirectToHome) {
+      return <Redirect to="/" />;
+    }
+
     return (
       <div className="container">
         <div className="column is-6 is-offset-3">
-          <div className="field">
-            <label className="label">Name</label>
-            <div className="control">
-              <input className="input" type="text" placeholder="Type your name" value={this.state.name} />
+          <form onSubmit={this.onSubmit}>
+            <div className="field">
+              <label className="label">Name</label>
+              <div className="control has-icons-right">
+                <DebounceInput
+                  id="name"
+                  debounceTimeout={300}
+                  onChange={this.inputOnChange}
+                  className={`input ${FIELD_CLASS[this.state.statusFields['name']]}`}
+                  type="text"
+                  placeholder="Type your name"
+                  value={this.state.name}
+                />
+                <span className="icon is-small is-right">
+                  <i className={`fas ${FIELD_ICON[this.state.statusFields['name']]}`} />
+                </span>
+              </div>
+              {this.state.statusFields['name'] === 'error' && <p className="help is-danger">This name is required</p>}
             </div>
-          </div>
 
-          <div className="field">
-            <label className="label">Username</label>
-            <div className="control has-icons-left has-icons-right">
-              <DebounceInput
-                id="username"
-                type="text"
-                minLength={2}
-                debounceTimeout={300}
-                onChange={this.inputOnChange}
-                className={`input ${FIELD_CLASS[this.state.statusFields['username']]}`}
-                placeholder="Type some unique username"
-                value={this.state.username}
-              />
-              <span className="icon is-small is-left">
-                <i className="fas fa-user" />
-              </span>
-              <span className="icon is-small is-right">
-                <i className={`fas ${FIELD_ICON[this.state.statusFields['username']]}`} />
-              </span>
+            <div className="field">
+              <label className="label">Username</label>
+              <div className="control has-icons-left has-icons-right">
+                <DebounceInput
+                  id="username"
+                  type="text"
+                  debounceTimeout={300}
+                  onChange={this.inputOnChange}
+                  className={`input ${FIELD_CLASS[this.state.statusFields['username']]}`}
+                  placeholder="Type some unique username"
+                  value={this.state.username}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-user" />
+                </span>
+                <span className="icon is-small is-right">
+                  <i className={`fas ${FIELD_ICON[this.state.statusFields['username']]}`} />
+                </span>
+              </div>
+              {this.state.statusFields['username'] === 'error' && (
+                <div>
+                  {this.state.username.length === 0 ? (
+                    <p className="help is-danger">This username is required</p>
+                  ) : (
+                    <p className="help is-danger">This username is unavailable</p>
+                  )}
+                </div>
+              )}
             </div>
-            {this.state.statusFields['username'] === 'error' && <p className="help is-danger">This username is unavailable</p>}
-          </div>
 
-          <div className="field">
-            <label className="label">Email</label>
-            <div className="control has-icons-left has-icons-right">
-              <input className="input is-danger" type="email" placeholder="Your e-mail" value={this.state.email} />
-              <span className="icon is-small is-left">
-                <i className="fas fa-envelope" />
-              </span>
-              <span className="icon is-small is-right">
-                <i className="fas fa-exclamation-triangle" />
-              </span>
+            <div className="field">
+              <label className="label">E-mail</label>
+              <div className="control has-icons-left has-icons-right">
+                <DebounceInput
+                  id="email"
+                  type="email"
+                  debounceTimeout={300}
+                  onChange={this.inputOnChange}
+                  className={`input ${FIELD_CLASS[this.state.statusFields['email']]}`}
+                  placeholder="Your e-mail"
+                  value={this.state.email}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-envelope" />
+                </span>
+                <span className="icon is-small is-right">
+                  <i className={`fas ${FIELD_ICON[this.state.statusFields['email']]}`} />
+                </span>
+              </div>
+              {this.state.statusFields['email'] === 'error' && (
+                <div>
+                  {this.state.email.length === 0 ? (
+                    <p className="help is-danger">This e-mail is required</p>
+                  ) : (
+                    <p className="help is-danger">This e-mail is unavailable</p>
+                  )}
+                </div>
+              )}
             </div>
-            <p className="help is-danger">This email is invalid</p>
-          </div>
 
-          <div className="field">
-            <label className="label">Password</label>
-            <p className="control has-icons-left">
-              <input className="input" type="password" placeholder="Your secret password" value={this.state.password} />
-              <span className="icon is-small is-left">
-                <i className="fas fa-lock" />
-              </span>
-            </p>
-          </div>
+            <div className="field">
+              <label className="label">Password</label>
+              <div className="control has-icons-left">
+                <DebounceInput
+                  id="password"
+                  type="password"
+                  debounceTimeout={300}
+                  onChange={this.inputOnChange}
+                  className={`input ${FIELD_CLASS[this.state.statusFields['password']]}`}
+                  placeholder="Your secret password"
+                  value={this.state.password}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-lock" />
+                </span>
+              </div>
+              {this.state.statusFields['password'] === 'error' && <p className="help is-danger">This password is required</p>}
+            </div>
 
-          <div className="field is-grouped is-grouped-right">
-            <div className="control">
-              <button className="button is-text">Back</button>
+            <div className="field is-grouped is-grouped-right">
+              <div className="control">
+                <button className="button is-text">Back</button>
+              </div>
+              <div className="control">
+                <button className={`button is-danger is-link ${this.state.loading && 'is-loading'}`} disabled={this.enableButton()}>
+                  Create account
+                </button>
+              </div>
             </div>
-            <div className="control">
-              <button className="button is-link">Create account</button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     );

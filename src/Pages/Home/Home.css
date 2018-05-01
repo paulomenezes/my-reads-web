@@ -1,0 +1,12 @@
+.book-category-title {
+  font-size: 18px;
+  margin: 10px 0 30px;
+
+  color: #f00;
+}
+
+.search-area {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
