@@ -4,11 +4,18 @@ import PropTypes from 'prop-types';
 import './Book.css';
 import UpdateShelf from '../UpdateShelf/UpdateShelf';
 
+import { getUser } from '../../Services/User';
+import { updateShelf } from '../../Services/Books';
+
 export default class Book extends React.Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
     shelf: PropTypes.string.isRequired,
-    onUpdateShelf: PropTypes.func.isRequired
+    onUpdateShelf: PropTypes.func
+  };
+
+  state = {
+    user: getUser()
   };
 
   constructor(props) {
@@ -29,6 +36,19 @@ export default class Book extends React.Component {
     }
   };
 
+  onUpdateShelf = async shelf => {
+    try {
+      const response = await updateShelf(this.props.book, shelf, this.state.user.id);
+      const data = await response.json();
+
+      if (this.props.onUpdateShelf) {
+        this.props.onUpdateShelf(shelf, this.props.book.id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   render() {
     return (
       <div className="book">
@@ -40,7 +60,7 @@ export default class Book extends React.Component {
         </div>
         <div className="book-title">{this.props.book.volumeInfo.title}</div>
         <div className="book-author">{this.props.book.volumeInfo.authors && this.props.book.volumeInfo.authors.join(', ')}</div>
-        <UpdateShelf value={this.props.shelf} onUpdateValue={this.props.onUpdateShelf} />
+        {this.state.user && <UpdateShelf value={this.props.shelf} onUpdateValue={this.onUpdateShelf} />}
       </div>
     );
   }

@@ -2,13 +2,12 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { DebounceInput } from 'react-debounce-input';
 
-// import PropTypes from 'prop-types';
+import { register, checkUsernameAndEmail } from '../../Services/User';
 
 const FIELD_CLASS = {
   blank: '',
   loading: '',
   error: 'is-danger',
-  email: 'is-danger',
   success: 'is-success'
 };
 
@@ -68,17 +67,7 @@ export default class Register extends React.Component {
         }
       }));
 
-      const response = await fetch('http://localhost:8080/users/check', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          field: id,
-          value: value
-        })
-      });
+      const response = await checkUsernameAndEmail(id, value);
 
       this.setState(prevState => ({
         statusFields: {
@@ -112,16 +101,8 @@ export default class Register extends React.Component {
         password: this.state.password
       };
 
-      const response = await fetch('http://localhost:8080/users', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user)
-      });
-
-      const id = await response.text();
+      const response = await register(user);
+      const { id } = await response.json();
 
       localStorage.setItem(
         'user',
@@ -249,9 +230,6 @@ export default class Register extends React.Component {
             </div>
 
             <div className="field is-grouped is-grouped-right">
-              <div className="control">
-                <button className="button is-text">Back</button>
-              </div>
               <div className="control">
                 <button className={`button is-danger is-link ${this.state.loading && 'is-loading'}`} disabled={this.enableButton()}>
                   Create account

@@ -1,0 +1,22 @@
+import { MY_READS_API, GOOGLE_BOOKS } from '../constants';
+
+const myReadsApi = `${MY_READS_API}books/`;
+
+export const get = bookId => fetch(`${GOOGLE_BOOKS}/${bookId}`).then(res => res.json());
+
+export const search = (query, page = 0, maxResults = 12) =>
+  fetch(`${GOOGLE_BOOKS}?q=${query}&maxResults=${maxResults}&startIndex=${page * maxResults}`)
+    .then(res => res.json())
+    .then(data => data.items);
+
+export const userShelves = userId => fetch(myReadsApi + userId).then(res => res.json());
+
+export const updateShelf = (book, shelf, userId) =>
+  fetch(myReadsApi, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ shelf, book, user: userId })
+  });

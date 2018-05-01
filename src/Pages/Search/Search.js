@@ -1,53 +1,66 @@
 import React from 'react';
 import queryString from 'query-string';
-import InfiniteScroll from 'react-infinite-scroller';
 
-import { search } from '../../Services/BooksAPI';
+import { search, userShelves } from '../../Services/Books';
 
 import Book from '../../Components/Book/Book';
+import { getUser } from '../../Services/User';
 
 class Search extends React.Component {
   state = {
     books: [],
-    query: '',
-    hasMoreItems: true,
     loading: false,
-    page: 0,
-    maxResults: 36
+    shelves: [],
+    user: getUser()
   };
 
   async componentDidMount() {
-    // await this.search(this.props.location.search, 0);
+    await this.search(this.props.location.search);
+
+    try {
+      if (this.state.user.id) {
+        const { shelves } = await userShelves(this.state.user.id);
+        console.log(shelves);
+        this.setState({
+          shelves
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async componentWillReceiveProps(nextProps, nextState) {
-    // await this.search(nextProps.location.search, 0);
+    await this.search(nextProps.location.search);
   }
 
-  search = async (queryParam, page) => {
+  search = async queryParam => {
     try {
       this.setState({
-        loading: true,
-        query: queryParam
+        loading: true
       });
 
       const query = queryString.parse(queryParam);
-      let books = await search(query.q, page, this.state.maxResults);
+      let books = await search(query.q);
 
       if (books && books.error) {
         books = [];
       }
 
-      console.log(books, page, page < 2);
-
       this.setState({
         loading: false,
-        books,
-        hasMoreItems: page < 2
+        books
       });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  onUpdateShelf = async (shelf, book) => {};
+
+  getBookShelf = bookId => {
+    const shelf = this.state.shelves.filter(shelf => shelf.book === bookId);
+    return shelf && shelf.length > 0 ? shelf[0].shelf : 'NONE';
   };
 
   render() {
@@ -58,24 +71,13 @@ class Search extends React.Component {
             {this.state.loading && <i>Carregando...</i>}
             {!this.state.loading && this.state.books.length === 0 && <i>No book found</i>}
           </div>
-          <InfiniteScroll
-            pageStart={0}
-            loadMore={page => this.search(this.state.query, page)}
-            hasMore={this.state.hasMoreItems}
-            loader={
-              <div className="loader" key={0}>
-                Loading ...
+          <div className="columns is-multiline">
+            {this.state.books.map(book => (
+              <div className="column is-2" key={book.id}>
+                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={shelf => this.onUpdateShelf(shelf, book)} />
               </div>
-            }
-          >
-            <div className="columns is-multiline">
-              {this.state.books.map(book => (
-                <div className="column is-2" key={book.id}>
-                  <Book book={book} shelf="NONE" onUpdateShelf={shelf => {}} />
-                </div>
-              ))}
-            </div>
-          </InfiniteScroll>
+            ))}
+          </div>
         </div>
       </section>
     );

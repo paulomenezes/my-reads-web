@@ -3,58 +3,43 @@ import React, { Component } from 'react';
 import './Home.css';
 
 import Book from '../../Components/Book/Book';
-import { getAll } from '../../Services/BooksAPI';
+import BookShelf from '../../Components/BookShelf/BookShelf';
+import { getUser } from '../../Services/User';
+import { getAll, userShelves } from '../../Services/Books';
 
 export default class App extends Component {
   state = {
+    user: getUser(),
     books: [],
-    user: {
-      shelves: {
-        NONE: [],
-        READ: [1],
-        CURRENTLY_READING: [2],
-        WANT_TO_READ: []
-      }
-    }
+    shelves: []
   };
 
   async componentDidMount() {
-    // try {
-    //   const books = await getAll();
-    //   this.setState({
-    //     books: books.slice(0, 3)
-    //   });
-    // } catch (error) {
-    //   // console.log(error);
-    // }
+    if (this.state.user) {
+      try {
+        const { books, shelves } = await userShelves(this.state.user.id);
+        this.setState({
+          books,
+          shelves
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   onUpdateShelf = (shelf, bookId) => {
-    const oldShelf = this.getBookShelf(bookId);
-    const index = this.state.user.shelves[oldShelf].indexOf(bookId);
-
-    let shelves = this.state.user.shelves;
-    shelves[oldShelf].splice(index, 1);
-    shelves[shelf].push(bookId);
-
-    this.setState(prevState => ({
-      user: {
-        ...prevState.user,
-        shelves
+    const shelves = this.state.shelves;
+    for (let index = 0; index < shelves.length; index++) {
+      if (shelves[index].book === bookId) {
+        shelves[index].shelf = shelf;
+        break;
       }
-    }));
-  };
+    }
 
-  getBookShelf = bookId => {
-    let shelf = 'NONE';
-    Object.keys(this.state.user.shelves).forEach(key => {
-      var book = this.state.user.shelves[key].filter(item => item === bookId);
-      if (book && book.length > 0) {
-        shelf = key;
-      }
+    this.setState({
+      shelves
     });
-
-    return shelf;
   };
 
   render() {
@@ -62,22 +47,33 @@ export default class App extends Component {
       <section>
         <div className="container">
           <div className="columns">
-            <div className="column is-6">
+            <div className="column is-8">
               <div className="book-category-title">CURRENTLY READING</div>
-              <i>No currently reading books</i>
-              {/* <div className="columns">
-                {this.state.books.map(book => (
-                  <div className="column is-4" key={book.id}>
-                    <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={shelf => this.onUpdateShelf(shelf, book.id)} />
-                  </div>
-                ))}
-              </div> */}
+              <BookShelf
+                onUpdateShelf={this.onUpdateShelf}
+                shelves={this.state.shelves}
+                books={this.state.books}
+                shelf="CURRENTLY_READING"
+                placeholder="currently reading"
+              />
               <div className="book-category-title">WANT TO READ</div>
-              <i>No want to read books</i>
+              <BookShelf
+                onUpdateShelf={this.onUpdateShelf}
+                shelves={this.state.shelves}
+                books={this.state.books}
+                shelf="WANT_TO_READ"
+                placeholder="No want to read books"
+              />
               <div className="book-category-title">READ</div>
-              <i>No read books</i>
+              <BookShelf
+                onUpdateShelf={this.onUpdateShelf}
+                shelves={this.state.shelves}
+                books={this.state.books}
+                shelf="READ"
+                placeholder="No read books"
+              />
             </div>
-            <div className="column is-6">
+            <div className="column is-4">
               <div className="book-category-title">UPDATES</div>
               <i>No updates</i>
             </div>
