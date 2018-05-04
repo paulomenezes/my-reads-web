@@ -5,7 +5,6 @@ import Book from '../Book/Book';
 
 function BookShelf(props) {
   const shelves = props.shelves.filter(shelf => shelf.shelf === props.shelf);
-  console.log(shelves);
 
   if (shelves.length === 0) {
     return <i>{props.placeholder}</i>;

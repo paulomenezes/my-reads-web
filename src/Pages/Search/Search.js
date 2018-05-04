@@ -20,7 +20,7 @@ class Search extends React.Component {
     try {
       if (this.state.user.id) {
         const { shelves } = await userShelves(this.state.user.id);
-        console.log(shelves);
+
         this.setState({
           shelves
         });
@@ -56,10 +56,15 @@ class Search extends React.Component {
     }
   };
 
-  onUpdateShelf = async (shelf, book) => {};
+  onUpdateShelf = (shelf, bookId) => {
+    this.setState(prevState => ({
+      shelves: prevState.shelves.map(s => ({ ...s, shelf: s.book === bookId ? shelf : s.shelf }))
+    }));
+  };
 
   getBookShelf = bookId => {
     const shelf = this.state.shelves.filter(shelf => shelf.book === bookId);
+    console.log(this.state.shelves, shelf);
     return shelf && shelf.length > 0 ? shelf[0].shelf : 'NONE';
   };
 
@@ -74,7 +79,7 @@ class Search extends React.Component {
           <div className="columns is-multiline">
             {this.state.books.map(book => (
               <div className="column is-2" key={book.id}>
-                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={shelf => this.onUpdateShelf(shelf, book)} />
+                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={this.onUpdateShelf} />
               </div>
             ))}
           </div>

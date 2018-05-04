@@ -7,6 +7,7 @@ import Search from '../Pages/Search/Search';
 import Register from '../Pages/Register/Register';
 
 import Header from '../Components/Header/Header';
+import Footer from '../Components/Footer/Footer';
 
 export default class App extends Component {
   render() {
@@ -17,6 +18,7 @@ export default class App extends Component {
           <Route exact path="/" component={Home} />
           <Route exact path="/search" component={Search} />
           <Route exact path="/signup" component={Register} />
+          <Footer />
         </section>
       </BrowserRouter>
     );

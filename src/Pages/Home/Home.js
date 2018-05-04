@@ -29,17 +29,9 @@ export default class App extends Component {
   }
 
   onUpdateShelf = (shelf, bookId) => {
-    const shelves = this.state.shelves;
-    for (let index = 0; index < shelves.length; index++) {
-      if (shelves[index].book === bookId) {
-        shelves[index].shelf = shelf;
-        break;
-      }
-    }
-
-    this.setState({
-      shelves
-    });
+    this.setState(prevState => ({
+      shelves: prevState.shelves.map(s => ({ ...s, shelf: s.book === bookId ? shelf : s.shelf }))
+    }));
   };
 
   render() {
@@ -54,7 +46,7 @@ export default class App extends Component {
                 shelves={this.state.shelves}
                 books={this.state.books}
                 shelf="CURRENTLY_READING"
-                placeholder="currently reading"
+                placeholder="No currently reading books"
               />
               <div className="book-category-title">WANT TO READ</div>
               <BookShelf
