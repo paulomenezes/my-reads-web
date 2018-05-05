@@ -7,10 +7,7 @@ const Footer = props => (
     <div className="container">
       <div className="content has-text-centered">
         <p>
-          <strong>My</strong>Reads<strong>.</strong> by{' '}
-          <a href="http://github.com/paulomenezes" target="_blank">
-            Paulo Menezes
-          </a>.
+          <strong>My</strong>Reads<strong>.</strong> by <a href="http://github.com/paulomenezes">Paulo Menezes</a>.
         </p>
       </div>
     </div>

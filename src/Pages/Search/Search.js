@@ -1,7 +1,8 @@
 import React from 'react';
 import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 
-import { search, userShelves } from '../../Services/Books';
+import { search } from '../../Services/Books';
 
 import Book from '../../Components/Book/Book';
 import { getUser } from '../../Services/User';
@@ -10,34 +11,25 @@ class Search extends React.Component {
   state = {
     books: [],
     loading: false,
-    shelves: [],
+    query: '',
     user: getUser()
   };
 
   async componentDidMount() {
     await this.search(this.props.location.search);
-
-    try {
-      if (this.state.user.id) {
-        const { shelves } = await userShelves(this.state.user.id);
-
-        this.setState({
-          shelves
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   async componentWillReceiveProps(nextProps, nextState) {
-    await this.search(nextProps.location.search);
+    if (this.state.query !== nextProps.location.search) {
+      await this.search(nextProps.location.search);
+    }
   }
 
   search = async queryParam => {
     try {
       this.setState({
-        loading: true
+        loading: true,
+        query: queryParam
       });
 
       const query = queryString.parse(queryParam);
@@ -56,15 +48,8 @@ class Search extends React.Component {
     }
   };
 
-  onUpdateShelf = (shelf, bookId) => {
-    this.setState(prevState => ({
-      shelves: prevState.shelves.map(s => ({ ...s, shelf: s.book === bookId ? shelf : s.shelf }))
-    }));
-  };
-
   getBookShelf = bookId => {
-    const shelf = this.state.shelves.filter(shelf => shelf.book === bookId);
-    console.log(this.state.shelves, shelf);
+    const shelf = this.props.shelves.filter(shelf => shelf.book === bookId);
     return shelf && shelf.length > 0 ? shelf[0].shelf : 'NONE';
   };
 
@@ -79,7 +64,7 @@ class Search extends React.Component {
           <div className="columns is-multiline">
             {this.state.books.map(book => (
               <div className="column is-2" key={book.id}>
-                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={this.onUpdateShelf} />
+                <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={this.props.onUpdateShelf} />
               </div>
             ))}
           </div>
@@ -89,4 +74,4 @@ class Search extends React.Component {
   }
 }
 
-export default Search;
+export default withRouter(Search);

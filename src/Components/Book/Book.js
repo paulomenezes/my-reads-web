@@ -38,11 +38,10 @@ export default class Book extends React.Component {
 
   onUpdateShelf = async shelf => {
     try {
-      const response = await updateShelf(this.props.book, shelf, this.state.user.id);
-      const data = await response.json();
+      await updateShelf(this.props.book, shelf, this.state.user.id);
 
       if (this.props.onUpdateShelf) {
-        this.props.onUpdateShelf(shelf, this.props.book.id);
+        this.props.onUpdateShelf();
       }
     } catch (error) {
       console.log(error);
