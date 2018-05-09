@@ -4,19 +4,20 @@ import './Home.css';
 
 import BookShelf from '../../Components/BookShelf/BookShelf';
 import { getUser } from '../../Services/User';
-import { userShelves } from '../../Services/Books';
+import { userBooks } from '../../Services/Books';
 
 export default class App extends Component {
   state = {
     user: getUser(),
     books: [],
-    shelves: []
+    shelves: [],
+    shelvesNames: ['currently reading', 'want to read', 'read']
   };
 
   async componentDidMount() {
     if (this.state.user) {
       try {
-        const { books } = await userShelves(this.state.user.id);
+        const { books } = await userBooks(this.state.user.id);
         this.setState({
           books
         });
@@ -32,30 +33,9 @@ export default class App extends Component {
         <div className="container">
           <div className="columns">
             <div className="column is-8">
-              <div className="book-category-title">CURRENTLY READING</div>
-              <BookShelf
-                onUpdateShelf={this.props.onUpdateShelf}
-                shelves={this.props.shelves}
-                books={this.state.books}
-                shelf="CURRENTLY_READING"
-                placeholder="No currently reading books"
-              />
-              <div className="book-category-title">WANT TO READ</div>
-              <BookShelf
-                onUpdateShelf={this.props.onUpdateShelf}
-                shelves={this.props.shelves}
-                books={this.state.books}
-                shelf="WANT_TO_READ"
-                placeholder="No want to read books"
-              />
-              <div className="book-category-title">READ</div>
-              <BookShelf
-                onUpdateShelf={this.props.onUpdateShelf}
-                shelves={this.props.shelves}
-                books={this.state.books}
-                shelf="READ"
-                placeholder="No read books"
-              />
+              {this.state.shelvesNames.map(shelf => (
+                <BookShelf key={shelf} onUpdateShelf={this.props.onUpdateShelf} shelves={this.props.shelves} books={this.state.books} title={shelf} />
+              ))}
             </div>
             <div className="column is-4">
               <div className="book-category-title">UPDATES</div>

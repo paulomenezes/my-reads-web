@@ -9,7 +9,9 @@ export const search = (query, page = 0, maxResults = 12) =>
     .then(res => res.json())
     .then(data => data.items);
 
-export const userShelves = userId => fetch(myReadsApi + userId).then(res => res.json());
+export const userShelves = userId => fetch(myReadsApi + userId + '/shelves').then(res => res.json());
+
+export const userBooks = userId => fetch(myReadsApi + userId + '/books').then(res => res.json());
 
 export const updateShelf = (book, shelf, userId) =>
   fetch(myReadsApi, {
