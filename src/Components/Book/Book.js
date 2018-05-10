@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import './Book.css';
 import UpdateShelf from '../UpdateShelf/UpdateShelf';
@@ -51,12 +52,15 @@ export default class Book extends React.Component {
   render() {
     return (
       <div className="book">
-        <div className="book-cover" ref={this.coverRef}>
-          {this.props.book.volumeInfo.imageLinks &&
-            this.props.book.volumeInfo.imageLinks.thumbnail ? (
+        <Link to={`/book/${this.props.book.id}`}>
+          <div className="book-cover" ref={this.coverRef}>
+            {this.props.book.volumeInfo.imageLinks && this.props.book.volumeInfo.imageLinks.thumbnail ? (
               <img alt={this.props.book.volumeInfo.title} src={this.props.book.volumeInfo.imageLinks.thumbnail} />
-            ) : (<div className="book-without-cover">No cover</div>)}
-        </div>
+            ) : (
+              <div className="book-without-cover">No cover</div>
+            )}
+          </div>
+        </Link>
         <div className="book-title">{this.props.book.volumeInfo.title}</div>
         <div className="book-author">{this.props.book.volumeInfo.authors && this.props.book.volumeInfo.authors.join(', ')}</div>
         {this.state.user && <UpdateShelf value={this.props.shelf} onUpdateValue={this.onUpdateShelf} />}
