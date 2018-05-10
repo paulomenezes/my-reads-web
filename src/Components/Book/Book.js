@@ -53,9 +53,9 @@ export default class Book extends React.Component {
       <div className="book">
         <div className="book-cover" ref={this.coverRef}>
           {this.props.book.volumeInfo.imageLinks &&
-            this.props.book.volumeInfo.imageLinks.thumbnail && (
+            this.props.book.volumeInfo.imageLinks.thumbnail ? (
               <img alt={this.props.book.volumeInfo.title} src={this.props.book.volumeInfo.imageLinks.thumbnail} />
-            )}
+            ) : (<div className="book-without-cover">No cover</div>)}
         </div>
         <div className="book-title">{this.props.book.volumeInfo.title}</div>
         <div className="book-author">{this.props.book.volumeInfo.authors && this.props.book.volumeInfo.authors.join(', ')}</div>
