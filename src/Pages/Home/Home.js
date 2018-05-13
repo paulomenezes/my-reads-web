@@ -38,7 +38,7 @@ export default class App extends Component {
               ))}
             </div>
             <div className="column is-4">
-              <div className="book-category-title">UPDATES</div>
+              <div className="category-title">UPDATES</div>
               <i>No updates</i>
             </div>
           </div>

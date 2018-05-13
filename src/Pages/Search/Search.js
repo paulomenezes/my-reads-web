@@ -16,7 +16,7 @@ class Search extends React.Component {
   };
 
   async componentDidMount() {
-    await this.search(this.props.location.search);
+    await this.search(this.props.search ? '?q=' + this.props.search : this.props.location.search);
   }
 
   async componentWillReceiveProps(nextProps, nextState) {
@@ -33,7 +33,7 @@ class Search extends React.Component {
       });
 
       const query = queryString.parse(queryParam);
-      let books = await search(query.q);
+      let books = await search(query.q, 1, this.props.maxItems ? this.props.maxItems : 20);
 
       if (books && books.error) {
         books = [];
@@ -56,14 +56,14 @@ class Search extends React.Component {
   render() {
     return (
       <section>
-        <div className="container">
+        <div className={!this.props.column ? 'container' : ''}>
           <div>
             {this.state.loading && <i>Carregando...</i>}
             {!this.state.loading && this.state.books.length === 0 && <i>No book found</i>}
           </div>
           <div className="columns is-multiline">
             {this.state.books.map(book => (
-              <div className="column is-2" key={book.id}>
+              <div className={`column ${this.props.column ? this.props.column : 'is-2'}`} key={book.id}>
                 <Book book={book} shelf={this.getBookShelf(book.id)} onUpdateShelf={this.props.onUpdateShelf} />
               </div>
             ))}

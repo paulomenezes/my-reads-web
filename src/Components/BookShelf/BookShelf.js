@@ -10,7 +10,7 @@ function BookShelf(props) {
 
   return (
     <div>
-      <div className="book-category-title">{props.title}</div>
+      <div className="category-title">{props.title}</div>
       {shelves.length === 0 ? (
         <i>No {props.title} books</i>
       ) : (

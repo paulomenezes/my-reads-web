@@ -1,3 +1,12 @@
 * {
   font-family: Lato;
 }
+
+.category-title {
+  font-size: 18px;
+  margin: 10px 0 30px;
+
+  text-transform: uppercase;
+
+  color: #f00;
+}

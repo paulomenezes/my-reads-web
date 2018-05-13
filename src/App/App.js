@@ -44,7 +44,7 @@ export default class App extends Component {
           <Route exact path="/" render={() => <Home shelves={this.state.shelves} onUpdateShelf={this.onUpdateShelf} />} />
           <Route exact path="/search" render={() => <Search shelves={this.state.shelves} onUpdateShelf={this.onUpdateShelf} />} />
           <Route exact path="/signup" component={Register} />
-          <Route exact path="/book/:id" component={BookDetail} />
+          <Route exact path="/book/:id" render={() => <BookDetail shelves={this.state.shelves} onUpdateShelf={this.onUpdateShelf} />} />
           <Footer />
         </section>
       </BrowserRouter>

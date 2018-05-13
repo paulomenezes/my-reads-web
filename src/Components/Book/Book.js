@@ -37,18 +37,6 @@ export default class Book extends React.Component {
     }
   };
 
-  onUpdateShelf = async shelf => {
-    try {
-      await updateShelf(this.props.book, shelf, this.state.user.id);
-
-      if (this.props.onUpdateShelf) {
-        this.props.onUpdateShelf();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   render() {
     return (
       <div className="book">
@@ -63,7 +51,7 @@ export default class Book extends React.Component {
         </Link>
         <div className="book-title">{this.props.book.volumeInfo.title}</div>
         <div className="book-author">{this.props.book.volumeInfo.authors && this.props.book.volumeInfo.authors.join(', ')}</div>
-        {this.state.user && <UpdateShelf value={this.props.shelf} onUpdateValue={this.onUpdateShelf} />}
+        {this.state.user && <UpdateShelf value={this.props.shelf} book={this.props.book} onUpdateValue={this.props.onUpdateShelf} />}
       </div>
     );
   }

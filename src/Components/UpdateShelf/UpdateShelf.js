@@ -4,14 +4,19 @@ import PropTypes from 'prop-types';
 import './UpdateShelf.css';
 import { BOOK_SHELF_OPTIONS, BOOK_SHELF_ICONS } from '../../constants';
 
+import { getUser } from '../../Services/User';
+import { updateShelf } from '../../Services/Books';
+
 export default class UpdateShelf extends React.Component {
   state = {
-    opened: false
+    opened: false,
+    user: getUser()
   };
 
   static propTypes = {
     value: PropTypes.oneOf(Object.keys(BOOK_SHELF_OPTIONS)).isRequired,
-    onUpdateValue: PropTypes.func.isRequired
+    book: PropTypes.object.isRequired,
+    onUpdateValue: PropTypes.func
   };
 
   constructor(props) {
@@ -42,10 +47,14 @@ export default class UpdateShelf extends React.Component {
     }));
   };
 
-  onUpdateValue = item => {
+  onUpdateValue = async item => {
     this.setState({
       opened: false
     });
+
+    try {
+      await updateShelf(this.props.book, item, this.state.user.id);
+    } catch (error) {}
 
     this.props.onUpdateValue(item);
   };
