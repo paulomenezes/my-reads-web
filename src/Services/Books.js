@@ -22,3 +22,13 @@ export const updateShelf = (book, shelf, userId) =>
     },
     body: JSON.stringify({ shelf, book, user: userId })
   });
+
+export const insertBooks = books =>
+  fetch(myReadsApi + 'books', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ books })
+  });

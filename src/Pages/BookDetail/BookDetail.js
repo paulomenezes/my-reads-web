@@ -15,17 +15,27 @@ class BookDetail extends React.Component {
   };
 
   async componentDidMount() {
+    this.loadBook(this.props);
+  }
+
+  async componentWillReceiveProps(nextProps, nextState) {
+    this.loadBook(nextProps);
+  }
+
+  loadBook = async props => {
     try {
-      const { book, shelf } = await get(this.props.match.params.id);
+      const { book, shelf } = await get(props.match.params.id);
       this.setState({
         book,
-        shelf,
+        shelf: {
+          shelf: shelf ? shelf.shelf : 'NONE'
+        },
         loading: false
       });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   truncate = text => {
     if (text.length < 500) {
@@ -69,7 +79,7 @@ class BookDetail extends React.Component {
             <div className="column is-9">
               <div className="book-title">{book.volumeInfo.title}</div>
               <div className="book-author">{book.volumeInfo.authors && book.volumeInfo.authors.join(', ')}</div>
-              <div className="book-description">{this.truncate(book.volumeInfo.description)}</div>
+              <div className="book-description">{book.volumeInfo.description && this.truncate(book.volumeInfo.description)}</div>
               <div className="columns">
                 <div className="column is-2 book-label">Publisher:</div>
                 <div className="column is-10">{book.volumeInfo.publisher}</div>

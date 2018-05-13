@@ -2,7 +2,7 @@ import React from 'react';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 
-import { search } from '../../Services/Books';
+import { search, insertBooks } from '../../Services/Books';
 
 import Book from '../../Components/Book/Book';
 import { getUser } from '../../Services/User';
@@ -20,7 +20,7 @@ class Search extends React.Component {
   }
 
   async componentWillReceiveProps(nextProps, nextState) {
-    if (this.state.query !== nextProps.location.search) {
+    if (nextProps.location.search && this.state.query !== nextProps.location.search) {
       await this.search(nextProps.location.search);
     }
   }
@@ -33,10 +33,12 @@ class Search extends React.Component {
       });
 
       const query = queryString.parse(queryParam);
-      let books = await search(query.q, 1, this.props.maxItems ? this.props.maxItems : 20);
+      let books = await search(query.q, 0, this.props.maxItems ? this.props.maxItems : 30);
 
       if (books && books.error) {
         books = [];
+      } else {
+        await insertBooks(books);
       }
 
       this.setState({

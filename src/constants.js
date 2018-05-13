@@ -1,4 +1,4 @@
-export const MY_READS_API = 'http://localhost:8080/';
+export const MY_READS_API = 'https://my-reads-server.herokuapp.com/';
 export const GOOGLE_BOOKS = 'https://www.googleapis.com/books/v1/volumes';
 
 export const BOOK_SHELF_OPTIONS = {
