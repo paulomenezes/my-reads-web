@@ -16,7 +16,7 @@ function BookShelf(props) {
       ) : (
         <div className="columns is-multiline">
           {shelves.map(shelf => (
-            <div className="column is-3" key={shelf._id}>
+            <div className="column is-2" key={shelf._id}>
               {props.books
                 .filter(book => book.id === shelf.book)
                 .map(book => <Book key={book.id} book={book} shelf={shelf.shelf} onUpdateShelf={props.onUpdateShelf} />)}

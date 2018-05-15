@@ -6,7 +6,6 @@ import './Book.css';
 import UpdateShelf from '../UpdateShelf/UpdateShelf';
 
 import { getUser } from '../../Services/User';
-import { updateShelf } from '../../Services/Books';
 
 export default class Book extends React.Component {
   static propTypes = {

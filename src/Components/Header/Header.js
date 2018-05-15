@@ -39,6 +39,11 @@ class Header extends React.Component {
     }
   };
 
+  logout = () => {
+    localStorage.removeItem('user');
+    document.location.href = '/';
+  };
+
   render() {
     return (
       <div className="header">
@@ -66,7 +71,14 @@ class Header extends React.Component {
             </div>
             <div className="column is-2 is-offset-1">
               {this.state.user ? (
-                <div className="user-sign">{this.state.user.name}</div>
+                <div className="user-sign">
+                  {this.state.user.name}{' '}
+                  <small>
+                    (<a href="#" onClick={this.logout}>
+                      sair
+                    </a>)
+                  </small>
+                </div>
               ) : (
                 <div className="user-sign">
                   <Link to="/signin">Sign in</Link>

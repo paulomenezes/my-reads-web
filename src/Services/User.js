@@ -12,7 +12,15 @@ export const getUser = () => {
   return null;
 };
 
-export const login = () => {};
+export const login = user =>
+  fetch(`${myReadsApi}login`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  });
 
 export const register = user =>
   fetch(myReadsApi, {

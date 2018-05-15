@@ -32,14 +32,10 @@ export default class App extends Component {
       <section>
         <div className="container">
           <div className="columns">
-            <div className="column is-8">
+            <div className="column">
               {this.state.shelvesNames.map(shelf => (
                 <BookShelf key={shelf} onUpdateShelf={this.props.onUpdateShelf} shelves={this.props.shelves} books={this.state.books} title={shelf} />
               ))}
-            </div>
-            <div className="column is-4">
-              <div className="category-title">UPDATES</div>
-              <i>No updates</i>
             </div>
           </div>
         </div>
