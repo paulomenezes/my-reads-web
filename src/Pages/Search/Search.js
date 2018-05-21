@@ -1,5 +1,4 @@
 import React from 'react';
-import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 
 import { search, insertBooks } from '../../Services/Books';
@@ -27,24 +26,27 @@ class Search extends React.Component {
 
   search = async queryParam => {
     try {
-      this.setState({
-        loading: true,
-        query: queryParam
-      });
+      const query = queryParam.substr(3);
 
-      const query = queryString.parse(queryParam);
-      let books = await search(query.q, 0, this.props.maxItems ? this.props.maxItems : 30);
+      if (query && query.length > 0) {
+        this.setState({
+          loading: true,
+          query: queryParam
+        });
 
-      if (books && books.error) {
-        books = [];
-      } else {
-        await insertBooks(books);
+        let books = await search(query, 0, this.props.maxItems ? this.props.maxItems : 30);
+
+        if (books && books.error) {
+          books = [];
+        } else {
+          await insertBooks(books);
+        }
+
+        this.setState({
+          loading: false,
+          books
+        });
       }
-
-      this.setState({
-        loading: false,
-        books
-      });
     } catch (error) {
       console.log(error);
     }

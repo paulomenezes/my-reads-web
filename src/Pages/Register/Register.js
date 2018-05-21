@@ -1,7 +1,6 @@
 import React from 'react';
 import { DebounceInput } from 'react-debounce-input';
 
-import ImageInput from '../../Components/ImageInput/ImageInput';
 import { register, checkUsernameAndEmail } from '../../Services/User';
 
 import './Register.css';
@@ -126,12 +125,7 @@ export default class Register extends React.Component {
       <form onSubmit={this.onSubmit}>
         <div className="container">
           <div className="columns">
-            <div className="column is-1 is-offset-3">
-              <div>
-                <ImageInput className="create-contact-avatar-input" name="avatarURL" maxHeight={64} />
-              </div>
-            </div>
-            <div className="column is-5">
+            <div className="column is-6 is-offset-3">
               <div className="field">
                 <label className="label">Name</label>
                 <div className="control has-icons-right">

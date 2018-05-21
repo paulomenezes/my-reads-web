@@ -226,15 +226,11 @@ class BookDetail extends React.Component {
               {this.state.reviews.length === 0 && <i>No review for this book</i>}
               {this.state.reviews.map((review, index) => (
                 <article className="media" key={index}>
-                  <figure className="media-left">
-                    <p className="image is-64x64">
-                      <img alt={review.user.name} src="https://bulma.io/images/placeholders/128x128.png" />
-                    </p>
-                  </figure>
                   <div className="media-content">
                     <div className="content">
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <strong style={{ marginRight: 10 }}>{review.user.name}</strong> <small>{review.user.username}</small>
+                        <strong style={{ marginRight: 10 }}>{review.user.name}</strong>{' '}
+                        <small style={{ marginRight: 10 }}>{review.user.username}</small>
                         <ReactStars count={5} value={review.rating} size={20} color1={'#CCCCCC'} color2={'#FAAA38'} edit={false} />
                       </div>
                       <p>{review.text}</p>

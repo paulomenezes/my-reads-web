@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { DebounceInput } from 'react-debounce-input';
-import queryString from 'query-string';
 
 import './Header.css';
 
@@ -13,30 +12,26 @@ class Header extends React.Component {
   };
 
   componentDidMount() {
-    const query = queryString.parse(this.props.location.search);
+    const query = this.props.location.search.substr(3);
     const user = localStorage.getItem('user');
 
     if (user) {
       this.setState({
         user: JSON.parse(user),
-        query: query && query.q ? query.q : ''
+        query
       });
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const query = queryString.parse(nextProps.location.search);
+    const query = nextProps.location.search.substr(3);
     this.setState({
-      query: query && query.q ? query.q : ''
+      query
     });
   }
 
   onChangeSearch = event => {
-    if (event.target.value.length === 0) {
-      this.props.history.push('/');
-    } else {
-      this.props.history.push('/search?q=' + encodeURI(event.target.value));
-    }
+    this.props.history.push('/search?q=' + encodeURI(event.target.value));
   };
 
   logout = () => {
@@ -74,7 +69,7 @@ class Header extends React.Component {
                 <div className="user-sign">
                   {this.state.user.name}{' '}
                   <small>
-                    (<a href="#" onClick={this.logout}>
+                    (<a href="" onClick={this.logout}>
                       sair
                     </a>)
                   </small>
