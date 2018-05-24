@@ -4,5 +4,5 @@ import { shallow } from 'enzyme';
 import Home from './Home';
 
 it('renders without crashing', () => {
-  const wrapper = shallow(<Home />);
+  const wrapper = shallow(<Home shelves={[]} onUpdateShelf={() => {}} />);
 });

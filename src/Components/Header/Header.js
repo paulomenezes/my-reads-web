@@ -4,7 +4,7 @@ import { DebounceInput } from 'react-debounce-input';
 
 import './Header.css';
 
-class Header extends React.Component {
+export class Header extends React.Component {
   state = {
     user: null,
     redirect: false,
@@ -18,7 +18,7 @@ class Header extends React.Component {
     if (user) {
       this.setState({
         user: JSON.parse(user),
-        query
+        query: decodeURI(query)
       });
     }
   }
@@ -26,7 +26,7 @@ class Header extends React.Component {
   componentWillReceiveProps(nextProps) {
     const query = nextProps.location.search.substr(3);
     this.setState({
-      query
+      query: decodeURI(query)
     });
   }
 
@@ -53,7 +53,12 @@ class Header extends React.Component {
                 </Link>
               </div>
             </div>
-            <div className="column is-6 is-offset-1">
+            <div className="column is-1">
+              <div className="user-sign">
+                <Link to="/search">Search</Link>
+              </div>
+            </div>
+            <div className="column is-6">
               <div className="search-area">
                 <DebounceInput
                   className="input"

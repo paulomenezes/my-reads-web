@@ -6,7 +6,7 @@ import BookShelf from '../../Components/BookShelf/BookShelf';
 import { getUser } from '../../Services/User';
 import { userBooks } from '../../Services/Books';
 
-export default class App extends Component {
+export default class Home extends Component {
   state = {
     user: getUser(),
     books: [],

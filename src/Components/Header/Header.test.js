@@ -1,12 +1,13 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import Header from './Header';
+import { Header } from './Header';
 
 let wrapper;
 
 beforeEach(() => {
-  wrapper = shallow(<Header />);
+  const search = { search: '?q=ios' };
+  wrapper = shallow(<Header location={search} />);
 });
 
 it('should render the MyReads logo', () => {
@@ -14,7 +15,7 @@ it('should render the MyReads logo', () => {
   expect(element.length).toEqual(3);
 });
 
-it('should render the Sign in, Sign up and Logo links', () => {
+it('should render the Sign in, Sign up, Search and Logo links', () => {
   const links = wrapper.find('Link');
-  expect(links.length).toEqual(3);
+  expect(links.length).toEqual(4);
 });

@@ -4,14 +4,17 @@ import { shallow, mount } from 'enzyme';
 import UpdateShelf from './UpdateShelf';
 import { BOOK_SHELF_OPTIONS } from '../../constants';
 
-let wrapper, value, onUpdateValueFn;
+let wrapper, value, onUpdateValueFn, book;
 
 beforeEach(() => {
   value = 'READ';
 
   onUpdateValueFn = jest.fn();
+  book = {
+    id: 1
+  };
 
-  wrapper = shallow(<UpdateShelf value={value} onUpdateValue={onUpdateValueFn} />);
+  wrapper = shallow(<UpdateShelf book={book} value={value} onUpdateValue={onUpdateValueFn} />);
 });
 
 afterEach(() => {
@@ -51,7 +54,7 @@ describe('<UpdateShelf />', () => {
   });
 
   it('should close when click outside', () => {
-    var mounted = mount(<UpdateShelf value={value} onUpdateValue={() => {}} />);
+    var mounted = mount(<UpdateShelf book={book} value={value} onUpdateValue={() => {}} />);
 
     const dropDown = mounted.find('div.dropdown button');
     dropDown.simulate('click');
@@ -112,7 +115,7 @@ describe('<UpdateShelf />', () => {
   });
 
   it('should unmount correctly', () => {
-    const wrapper = mount(<UpdateShelf value={value} onUpdateValue={() => {}} />);
+    const wrapper = mount(<UpdateShelf book={book} value={value} onUpdateValue={() => {}} />);
     wrapper.unmount();
   });
 });

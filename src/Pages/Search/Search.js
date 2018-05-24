@@ -5,6 +5,7 @@ import { search, insertBooks } from '../../Services/Books';
 
 import Book from '../../Components/Book/Book';
 import { getUser } from '../../Services/User';
+import Loading from '../../Components/Loading/Loading';
 
 class Search extends React.Component {
   state = {
@@ -26,7 +27,8 @@ class Search extends React.Component {
 
   search = async queryParam => {
     try {
-      const query = queryParam.substr(3);
+      let query = queryParam.substr(3);
+      query = decodeURI(query);
 
       if (query && query.length > 0) {
         this.setState({
@@ -46,6 +48,11 @@ class Search extends React.Component {
           loading: false,
           books
         });
+      } else {
+        this.setState({
+          loading: false,
+          books: []
+        });
       }
     } catch (error) {
       console.log(error);
@@ -62,7 +69,7 @@ class Search extends React.Component {
       <section>
         <div className={!this.props.column ? 'container' : ''}>
           <div>
-            {this.state.loading && <i>Carregando...</i>}
+            <Loading isLoading={this.state.loading} />
             {!this.state.loading && this.state.books.length === 0 && <i>No book found</i>}
           </div>
           <div className="columns is-multiline">
